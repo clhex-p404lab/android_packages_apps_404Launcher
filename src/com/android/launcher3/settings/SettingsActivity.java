@@ -59,7 +59,7 @@ import com.android.settingslib.collapsingtoolbar.CollapsingToolbarBaseActivity;
 
 import java.util.Collections;
 import java.util.List;
-
+import com.android.launcher3.util.Themes;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragment;
 import androidx.preference.PreferenceFragment.OnPreferenceStartFragmentCallback;
@@ -308,7 +308,8 @@ public class SettingsActivity extends CollapsingToolbarBaseActivity
                         AppReloader.get(getActivity()).reload();
                         return true;
                     });
-            }
+                case Utilities.KEY_DRAWER_THEME:
+		    return Themes.isThemedIconEnabled(getContext());            }
             return true;
         }
 

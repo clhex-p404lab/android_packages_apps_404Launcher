@@ -41,6 +41,7 @@ import android.util.Log;
 import android.util.SparseArray;
 import android.util.TypedValue;
 import android.util.Xml;
+import com.android.launcher3.util.Themes;
 import android.view.Display;
 
 import androidx.annotation.IntDef;
@@ -298,6 +299,7 @@ public class InvariantDeviceProfile implements SharedPreferences.OnSharedPrefere
             case KEY_SHOW_DRAWER_LABELS:
             case KEY_ICON_SIZE:
             case KEY_FONT_SIZE:
+            case Utilities.KEY_DRAWER_THEME:
             case DeviceProfile.KEY_PHONE_OVERVIEW_GRID:
                 onConfigChanged(mContext);
                 break;

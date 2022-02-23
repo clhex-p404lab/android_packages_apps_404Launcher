@@ -108,6 +108,13 @@
             launcher:logIdOn="615"
             launcher:logIdOff="616" />
 
+      <SwitchPreference
+        android:key="pref_drawer_theme"
+        android:title="@string/drawer_theme_title"
+        android:summary="@string/drawer_theme_summary"
+        android:defaultValue="false" />
+
+
         <SwitchPreference
             android:key="pref_allow_phone_taskbar"
             android:title="@string/pref_allow_phone_taskbar"

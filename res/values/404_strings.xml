@@ -76,4 +76,7 @@
     <string name="google_home_category_title">GOOGLE NOW</string>
     <string name="icon_category_title">ICONS CUSTOMIZATION</string>
 
+    <!-- Drawer Themed Icons -->
+    <string name="drawer_theme_title">Themed Icons inside drawer</string>
+    <string name="drawer_theme_summary">Show themed icons inside app drawer</string>
 </resources>

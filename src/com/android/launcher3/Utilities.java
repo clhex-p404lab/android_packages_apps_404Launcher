@@ -152,6 +152,8 @@ public final class Utilities {
     public static final String LENS_ACTIVITY = "com.google.android.apps.lens.MainActivity";
     public static final String LENS_URI = "google://lens";
 
+    public static final String KEY_DRAWER_THEME = "pref_drawer_theme";
+
     /**
      * Returns true if theme is dark.
      */
@@ -910,5 +912,10 @@ public final class Utilities {
         } catch (PackageManager.NameNotFoundException e) {
             return false;
         }
+    }
+
+    public static boolean isThemedIconsEnabledForAppDrawer(Context context) {
+        SharedPreferences prefs = getPrefs(context.getApplicationContext());
+        return prefs.getBoolean(KEY_DRAWER_THEME, false);
     }
 }
