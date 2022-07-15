@@ -125,6 +125,15 @@
         android:defaultValue="true"
         android:persistent="true" />
 
+    <com.android.launcher3.settings.preference.CustomSeekBarPreference
+        android:key="pref_app_drawer_opacity"
+        android:title="@string/app_drawer_background_opacity_title"
+        android:persistent="true"
+        android:max="100"
+        android:min="0"
+        settings:units="%"
+        android:defaultValue="80" />
+
     </PreferenceCategory>
     
     <PreferenceCategory
@@ -142,6 +151,15 @@
         android:title="@string/allow_wallpaper_zooming"
         android:summary="@string/allow_wallpaper_zooming_summary"
         android:defaultValue="true" />
+
+    <com.android.launcher3.settings.preference.CustomSeekBarPreference
+        android:key="pref_recents_opacity"
+        android:title="@string/recents_background_opacity_title"
+        android:persistent="true"
+        android:max="100"
+        android:min="0"
+        settings:units="%"
+        android:defaultValue="40" />
 
     <SwitchPreference
         android:key="pref_recents_meminfo"
