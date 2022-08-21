@@ -26,6 +26,16 @@
         android:summaryOn="@string/settings_lock_layout_summary_on"
         android:summaryOff="@string/settings_lock_layout_summary_off" />
 
+    <Preference
+            android:key="parallel_space"
+            android:title="@string/laboratory_parallel_space_title"
+            android:summary="@string/laboratory_parallel_space_summary"
+            android:order="-994">
+            <intent
+                android:targetPackage="ink.kscope.parallelspace"
+                android:targetClass="ink.kscope.parallelspace.MainActivity" />
+    </Preference>
+
     <com.android.launcher3.settings.NotificationDotsPreference
         android:key="pref_icon_badging"
         android:title="@string/notification_dots_title"
