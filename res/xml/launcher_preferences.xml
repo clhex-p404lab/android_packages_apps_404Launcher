@@ -23,6 +23,16 @@
         android:key="pref_icon_pack"
         android:title="@string/icon_pack_title" />
 
+    <Preference
+        android:key="parallel_space"
+        android:title="@string/laboratory_parallel_space_title"
+        android:summary="@string/laboratory_parallel_space_summary"
+        android:order="-994">
+        <intent
+            android:targetPackage="ink.kscope.parallelspace"
+            android:targetClass="ink.kscope.parallelspace.MainActivity" />
+    </Preference>
+
     <PreferenceCategory
         android:key="icon_category"
         android:title="@string/icon_category_title">

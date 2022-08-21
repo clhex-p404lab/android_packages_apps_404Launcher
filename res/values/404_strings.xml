@@ -78,4 +78,7 @@
     <string name="google_home_category_title">GOOGLE NOW</string>
     <string name="icon_category_title">ICONS CUSTOMIZATION</string>
 
+    <!-- Parallel space -->
+    <string name="laboratory_parallel_space_title">Parallel space</string>
+    <string name="laboratory_parallel_space_summary">Allow running multiple instances of the same application in parallel</string>
 </resources>
