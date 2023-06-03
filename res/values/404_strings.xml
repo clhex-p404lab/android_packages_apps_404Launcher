@@ -48,4 +48,9 @@
     <string name="app_info_version" translatable="false">Version</string>
     <string name="app_info_more" translatable="false">More</string>
 
+    <!-- Categories -->
+    <string name="general_category_title">General</string>
+    <string name="misc_category_title">Miscellaneous</string>
+    <string name="icon_category_title">Icon Customization</string>
+    <string name="appdrawer_category_title">App Drawer</string>
 </resources>

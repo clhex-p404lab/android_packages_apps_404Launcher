@@ -17,31 +17,10 @@
 <androidx.preference.PreferenceScreen
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:launcher="http://schemas.android.com/apk/res-auto">
-
-    <SwitchPreference
-        android:defaultValue="false"
-        android:key="pref_workspace_lock"
-        android:persistent="true"
-        android:title="@string/settings_lock_layout_title"
-        android:summaryOn="@string/settings_lock_layout_summary_on"
-        android:summaryOff="@string/settings_lock_layout_summary_off" />
-
-    <Preference
-            android:key="parallel_space"
-            android:title="@string/laboratory_parallel_space_title"
-            android:summary="@string/laboratory_parallel_space_summary"
-            android:order="-994">
-            <intent
-                android:targetPackage="ink.kscope.parallelspace"
-                android:targetClass="ink.kscope.parallelspace.MainActivity" />
-    </Preference>
     
-    <SwitchPreference
-        android:key="pref_recents_meminfo"
-        android:title="@string/recents_meminfo_title"
-        android:summary="@string/meminfo_summary"
-        android:defaultValue="false"
-        android:persistent="true" />
+    <PreferenceCategory
+        android:key="icon_category"
+        android:title="@string/icon_category_title"> 
 
     <com.android.launcher3.settings.NotificationDotsPreference
         android:key="pref_icon_badging"
@@ -61,7 +40,28 @@
         android:persistent="true"
         launcher:logIdOn="613"
         launcher:logIdOff="614" />
+    
+    <Preference
+        android:persistent="false"
+        android:title="@string/suggestion_pref_screen_title"
+        android:key="pref_suggestions"
+        android:summary="@string/suggestion_pref_screen_desc">
+        <intent android:action="android.settings.ACTION_CONTENT_SUGGESTIONS_SETTINGS" />
+    </Preference>
+    </PreferenceCategory>
 
+    <SwitchPreference
+        android:defaultValue="false"
+        android:key="pref_workspace_lock"
+        android:persistent="true"
+        android:title="@string/settings_lock_layout_title"
+        android:summaryOn="@string/settings_lock_layout_summary_on"
+        android:summaryOff="@string/settings_lock_layout_summary_off" />
+    
+    
+    <PreferenceCategory
+        android:key="general_category"
+        android:title="@string/general_category_title">
     <!--
       LAUNCHER_HOME_SCREEN_ROTATION_ENABLED(615)
       LAUNCHER_HOME_SCREEN_ROTATION_DISABLED(616)
@@ -80,7 +80,7 @@
         android:key="pref_enable_minus_one"
         android:summary="@string/pref_show_google_now_summary"
         android:title="@string/title_show_google_app" />
-
+        
     <SwitchPreference
         android:key="pref_dt_gesture"
         android:title="@string/pref_dt_gesture_title"
@@ -96,11 +96,10 @@
         <intent android:action="android.settings.ACTION_CONTENT_SUGGESTIONS_SETTINGS" />
     </Preference>
 
-    <Preference
-        android:key="pref_developer_options"
-        android:persistent="false"
-        android:title="@string/developer_options_title"
-        android:fragment="com.android.launcher3.settings.DeveloperOptionsFragment"/>
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:key="appdrawer_category"
+        android:title="@string/appdrawer_category_title"> 
 
     <SwitchPreference
         android:key="pref_desktop_show_labels"
@@ -113,5 +112,35 @@
         android:title="@string/drawer_show_labels"
         android:defaultValue="true"
         android:persistent="true" />
+
+    </PreferenceCategory>
+    
+    <PreferenceCategory
+        android:key="misc_category"
+        android:title="@string/misc_category_title"> 
+
+    <SwitchPreference
+        android:key="pref_recents_meminfo"
+        android:title="@string/recents_meminfo_title"
+        android:summary="@string/meminfo_summary"
+        android:defaultValue="false"
+        android:persistent="true" />
+
+    <Preference
+            android:key="parallel_space"
+            android:title="@string/laboratory_parallel_space_title"
+            android:summary="@string/laboratory_parallel_space_summary"
+            android:order="-994">
+            <intent
+                android:targetPackage="ink.kscope.parallelspace"
+                android:targetClass="ink.kscope.parallelspace.MainActivity" />
+    </Preference>
+    </PreferenceCategory>
+
+    <!-- <Preference
+        android:key="pref_developer_options"
+        android:persistent="false"
+        android:title="@string/developer_options_title"
+        android:fragment="com.android.launcher3.settings.DeveloperOptionsFragment"/> -->
 
 </androidx.preference.PreferenceScreen>
