@@ -731,10 +731,6 @@ public abstract class RecentsView<ACTIVITY_TYPE extends StatefulActivity<STATE_T
     // keeps track of the state of the filter for tasks in recents view
     private final RecentsFilterState mFilterState = new RecentsFilterState();
 
-    // Task locking
-    List<String> mLockedTasks = new ArrayList<>();
-    private String mStartPkg, mEndPkg;
-
     public RecentsView(Context context, @Nullable AttributeSet attrs, int defStyleAttr,
             BaseActivityInterface sizeStrategy) {
         super(context, attrs, defStyleAttr);
@@ -1363,8 +1359,6 @@ public abstract class RecentsView<ACTIVITY_TYPE extends StatefulActivity<STATE_T
         super.onPageBeginTransition();
         if (!mActivity.getDeviceProfile().isTablet) {
             mActionsView.updateDisabledFlags(OverviewActionsView.DISABLED_SCROLLING, true);
-            if (getCurrentPageTaskView() != null)
-            mStartPkg = getCurrentPageTaskView().getTask().key.getPackageName();
         }
         InteractionJankMonitorWrapper.begin(/* view= */ this,
                 InteractionJankMonitorWrapper.CUJ_RECENTS_SCROLLING);
@@ -1378,10 +1372,6 @@ public abstract class RecentsView<ACTIVITY_TYPE extends StatefulActivity<STATE_T
         if (isClearAllHidden() && !mActivity.getDeviceProfile().isTablet) {
             mActionsView.updateDisabledFlags(OverviewActionsView.DISABLED_SCROLLING, false);
         }
-        if (getCurrentPageTaskView() != null)
-            mEndPkg = getCurrentPageTaskView().getTask().key.getPackageName();
-        if (mLockedTasks.contains(mStartPkg) != mLockedTasks.contains(mEndPkg))
-            updateLockTaskDrawable();
         if (getNextPage() > 0) {
             setSwipeDownShouldLaunchApp(true);
         }
@@ -1765,23 +1755,11 @@ public abstract class RecentsView<ACTIVITY_TYPE extends StatefulActivity<STATE_T
 
     private void removeTasksViewsAndClearAllButton() {
         for (int i = getTaskViewCount() - 1; i >= 0; i--) {
-            TaskView tv = getTaskViewAt(i);
-            if (mLockedTasks.contains(tv.getTask().key.getPackageName())) continue;
-            removeView(tv);
+            removeView(requireTaskViewAt(i));
         }
         if (indexOfChild(mClearAllButton) != -1) {
             removeView(mClearAllButton);
         }
-    }
-
-    private void updateLockTaskDrawable() {
-        if (getNextPageTaskView() != null)
-            updateLockTaskDrawable(getNextPageTaskView().getTask().key.getPackageName());
-    }
-
-    private void updateLockTaskDrawable(String pkg) {
-        boolean isLocked = mLockedTasks.contains(pkg);
-        mActionsView.updateLockTaskDrawable(isLocked);
     }
 
     public int getTaskViewCount() {
@@ -3161,7 +3139,6 @@ public abstract class RecentsView<ACTIVITY_TYPE extends StatefulActivity<STATE_T
     public void createTaskDismissAnimation(PendingAnimation anim, TaskView dismissedTaskView,
             boolean animateTaskView, boolean shouldRemoveTask, long duration,
             boolean dismissingForSplitSelection) {
-        if (mLockedTasks.contains(dismissedTaskView.getTask().key.getPackageName())) return;
         if (mPendingAnimation != null) {
             mPendingAnimation.createPlaybackController().dispatchOnCancel().dispatchOnEnd();
         }
@@ -3860,9 +3837,7 @@ public abstract class RecentsView<ACTIVITY_TYPE extends StatefulActivity<STATE_T
 
         int count = getTaskViewCount();
         for (int i = 0; i < count; i++) {
-            TaskView tv = getTaskViewAt(i);
-            if (mLockedTasks.contains(tv.getTask().key.getPackageName())) continue;
-            addDismissedTaskAnimations(tv, duration, anim);
+            addDismissedTaskAnimations(requireTaskViewAt(i), duration, anim);
         }
 
         mPendingAnimation = anim;
@@ -3870,13 +3845,9 @@ public abstract class RecentsView<ACTIVITY_TYPE extends StatefulActivity<STATE_T
             if (isSuccess) {
                 // Remove all the task views now
                 finishRecentsAnimation(true /* toRecents */, false /* shouldPip */, () -> {
-                    if (!mLockedTasks.isEmpty()) {
-                        clearUnlockedTasks();
-                    } else {
-                        UI_HELPER_EXECUTOR.getHandler().postDelayed(
-                                ActivityManagerWrapper.getInstance()::removeAllRecentTasks,
-                                REMOVE_TASK_WAIT_FOR_APP_STOP_MS);
-                    }
+                    UI_HELPER_EXECUTOR.getHandler().postDelayed(
+                            ActivityManagerWrapper.getInstance()::removeAllRecentTasks,
+                            REMOVE_TASK_WAIT_FOR_APP_STOP_MS);
                     removeTasksViewsAndClearAllButton();
                     startHome();
                 });
@@ -3884,18 +3855,6 @@ public abstract class RecentsView<ACTIVITY_TYPE extends StatefulActivity<STATE_T
             mPendingAnimation = null;
         });
         return anim;
-    }
-
-    private void clearUnlockedTasks() {
-        for (int i = getTaskViewCount() - 1; i >= 0; i--) {
-            TaskView tv = getTaskViewAt(i);
-            if (mLockedTasks.contains(tv.getTask().key.getPackageName())) continue;
-            UI_HELPER_EXECUTOR.getHandler().postDelayed(
-                    () -> {
-                    ActivityManagerWrapper.getInstance().removeTask(tv.getTask().key.id);
-                },
-                    REMOVE_TASK_WAIT_FOR_APP_STOP_MS);
-        }
     }
 
     private boolean snapToPageRelative(int pageCount, int delta, boolean cycle) {
@@ -3928,7 +3887,6 @@ public abstract class RecentsView<ACTIVITY_TYPE extends StatefulActivity<STATE_T
     }
 
     public void dismissTask(TaskView taskView, boolean animateTaskView, boolean removeTask) {
-        if (mLockedTasks.contains(taskView.getTask().key.getPackageName())) return;
         PendingAnimation pa = new PendingAnimation(DISMISS_TASK_DURATION);
         createTaskDismissAnimation(pa, taskView, animateTaskView, removeTask, DISMISS_TASK_DURATION,
                 false /* dismissingForSplitSelection*/);
@@ -3950,16 +3908,6 @@ public abstract class RecentsView<ACTIVITY_TYPE extends StatefulActivity<STATE_T
         if (taskView != null) {
             dismissTask(taskView, true /*animateTaskView*/, true /*removeTask*/);
         }
-    }
-
-    public void lockCurrentTask(Task task) {
-        String pkg = task.key.getPackageName();
-        if (mLockedTasks.contains(pkg)) {
-            mLockedTasks.remove(pkg);
-        } else {
-            mLockedTasks.add(pkg);
-        }
-        updateLockTaskDrawable(pkg);
     }
 
     @Override
@@ -4176,7 +4124,6 @@ public abstract class RecentsView<ACTIVITY_TYPE extends StatefulActivity<STATE_T
         setImportantForAccessibility(isModal() ? IMPORTANT_FOR_ACCESSIBILITY_NO
                 : IMPORTANT_FOR_ACCESSIBILITY_AUTO);
         doScrollScale();
-        updateLockTaskDrawable();
     }
 
     private void updatePivots() {
@@ -4917,7 +4864,6 @@ public abstract class RecentsView<ACTIVITY_TYPE extends StatefulActivity<STATE_T
         updateCurrentTaskActionsVisibility();
         loadVisibleTaskData(TaskView.FLAG_UPDATE_ALL);
         updateEnabledOverlays();
-        updateLockTaskDrawable();
     }
 
     @Override
